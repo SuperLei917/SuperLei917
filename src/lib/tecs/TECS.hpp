@@ -81,7 +81,6 @@ public:
 	 * Must be called at 50Hz or greater
 	 */
 	void update_vehicle_state_estimates(float equivalent_airspeed, const float speed_deriv_forward, bool altitude_lock,
-					    bool in_air,
 					    float altitude, float vz);
 
 	/**
@@ -97,6 +96,23 @@ public:
 	float get_speed_weight() { return _pitch_speed_weight; }
 
 	void reset_state() { _states_initialized = false; }
+
+	void resetIntegrals()
+	{
+		_throttle_integ_state =  0.0f;
+		_pitch_integ_state = 0.0f;
+	}
+
+	/**
+	 * @brief Resets the altitude and height rate control trajectory generators to the input altitude
+	 *
+	 * @param altitude Vehicle altitude (AMSL) [m]
+	 */
+	void resetTrajectoryGenerators(const float altitude)
+	{
+		_alt_control_traj_generator.reset(0, 0, altitude);
+		_velocity_control_traj_generator.reset(0.0f, 0.0f, altitude);
+	}
 
 	enum ECL_TECS_MODE {
 		ECL_TECS_MODE_NORMAL = 0,
