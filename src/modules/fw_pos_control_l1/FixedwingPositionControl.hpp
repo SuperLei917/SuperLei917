@@ -136,6 +136,9 @@ static constexpr float MIN_AUTO_TIMESTEP = 0.01f;
 // [s] maximum time step between auto control updates
 static constexpr float MAX_AUTO_TIMESTEP = 0.05f;
 
+// [rad] minimum pitch while airspeed has not yet reached a controllable value in manual position controlled takeoff modes
+static constexpr float MIN_PITCH_DURING_MANUAL_TAKEOFF = 0.0f;
+
 class FixedwingPositionControl final : public ModuleBase<FixedwingPositionControl>, public ModuleParams,
 	public px4::WorkItem
 {
@@ -255,6 +258,9 @@ private:
 
 	// [us] time at which the plane went in the air
 	hrt_abstime _time_went_in_air{0};
+
+	// indicates whether we have completed a manual takeoff in a position control mode
+	bool _completed_manual_takeoff{false};
 
 	// Takeoff launch detection and runway
 	LaunchDetector _launchDetector;
@@ -399,9 +405,11 @@ private:
 	float getManualHeightRateSetpoint();
 
 	/**
-	 * @brief Check if we are in a takeoff situation
+	 * @brief Updates a state indicating whether a manual takeoff has been completed.
+	 *
+	 * Criteria include passing an airspeed threshold and not being in a landed state. VTOL airframes always pass.
 	 */
-	bool in_takeoff_situation();
+	void updateManualTakeoffStatus();
 
 	/**
 	 * @brief Update desired altitude base on user pitch stick input
