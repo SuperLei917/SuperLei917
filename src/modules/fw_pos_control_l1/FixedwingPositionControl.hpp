@@ -639,13 +639,14 @@ private:
 	 * @param throttle_cruise Throttle required for level flight at cruising airspeed [0,1]
 	 * @param climbout_mode True if TECS should engage climbout mode
 	 * @param climbout_pitch_min_rad Minimum pitch angle command in climbout mode [rad]
+	 * @param desired_max_sink_rate The desired max sink rate commandable when altitude errors are large [m/s]
 	 * @param disable_underspeed_detection True if underspeed detection should be disabled
 	 * @param hgt_rate_sp Height rate setpoint [m/s]
 	 */
 	void tecs_update_pitch_throttle(const float control_interval, float alt_sp, float airspeed_sp,
 					float pitch_min_rad, float pitch_max_rad,
 					float throttle_min, float throttle_max, float throttle_cruise,
-					bool climbout_mode, float climbout_pitch_min_rad,
+					bool climbout_mode, float climbout_pitch_min_rad, const float desired_max_sink_rate,
 					bool disable_underspeed_detection = false, float hgt_rate_sp = NAN);
 
 	/**
